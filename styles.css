@@ -17,6 +17,13 @@ main {
 
 }
 
+#title {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    font-weight: 500;
+}
+
 .bar {
     fill: steelblue;
 }

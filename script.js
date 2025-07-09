@@ -36,11 +36,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Append the x-axis
             svg.append("g")
+                .attr("id", "x-axis")
                 .attr("transform", `translate(${0}, ${height - padding})`)
                 .call(xAxis);
 
             // Append the y-axis
             svg.append("g")
+                .attr("id", "y-axis")
                 .attr("transform", `translate(${padding}, ${0})`)
                 .call(yAxis);
 
@@ -57,6 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 .enter()
                 .append("rect")
                 .attr("class", "bar")
+                .attr("data-date", d => d[0])
+                .attr("data-gdp", d => d[1])
                 .attr("x", d => xScale(new Date(d[0])))
                 .attr("y", d => yScale(d[1]))
                 .attr("width", (width - padding) / (gdpData.length))
@@ -69,17 +73,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         .style("opacity", 1);
                     tooltip.html(`${d[0]}<br>$${d[1]} Billion`)
                         .style("left", (event.pageX + 10) + "px")
-                        .style("top", (event.pageY - 15) + "px");
+                        .style("top", (event.pageY - 15) + "px")
+                        .attr("data-date", d[0]);
                 })
                 .on("mouseout", function(d, i) {
                     tooltip.transition()
                         .duration(50)
                         .style("opacity", 0);
-                })
-                .append("title")
-                .text(d => `${d[0]}, $${d[1]} Billion`);
-
-                
+                });
 
             // Add a title to the chart
             svg.append("text")
@@ -87,14 +88,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 .attr("x", width / 2)
                 .attr("y", 30)
                 .attr("text-anchor", "middle")
-                .style("font-size", "24px")
                 .text(data.name);
 
             // Add a source link
             svg.append("text")
                 .attr("id", "source")
-                .attr("x", width - 10)
-                .attr("y", height - 10)
+                .attr("x", width - 40)
+                .attr("y", height)
                 .attr("text-anchor", "end")
                 .style("font-size", "12px")
                 .text("Source: " + data.source_name + " (" + data.display_url + ")");
